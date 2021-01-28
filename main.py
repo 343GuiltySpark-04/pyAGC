@@ -19,7 +19,6 @@
 # TODO: Add nessecary ROM data
 
 
-
 # Define Memory and ROM
 class Memory:
     UNSWITCHED_WRITABLE_Memory = [0] * 767
@@ -30,6 +29,7 @@ class Memory:
     ACTIVEBANK = SWITCHED_WRITABLE_BANK_Memory1
     Memory = UNSWITCHED_WRITABLE_Memory + ACTIVEBANK + ACTIVE_UNWRITABLE_BANK + UNSWITCHED_UNWRITABLE_Memory
     IO_SPACE = [0] * 511
+
 
 # CPU object
 class CPU(object):
@@ -42,36 +42,31 @@ class CPU(object):
 
     def processInstruction(self, instruction: str):
         splitInstruction = instruction.split()
-        arg =  Memory.Memory[int(splitInstruction[1], 0)]
+        arg = Memory.Memory[int(splitInstruction[1], 0)]
 
-        
         # AD instruction. Adds the contents of a given Memory cell and writes it into the accumulator.
         if instruction.__contains__('AD') and not instruction.__contains__('ADS'):
             self.A = self.A + Memory.Memory[int(splitInstruction[1], 0)]
             # DEBUG
             print("(AD) Register A: " + str(self.A))
 
-
         # ADS instruction. Adds the contents of a given Memory cell and writes it into the accumulator.
         if instruction.__contains__('ADS'):
-            arg =arg + self.A
+            arg = arg + self.A
             # DEBUG
             print("(ADS) Memory Address: " + str(arg))
 
-
         # CA instruction. Copies contents of a given Memory cell into the accumulator.
         if instruction.__contains__('CA'):
-            self.A =  arg
+            self.A = arg
             # DEBUG
             print("(CA) Register A: " + str(self.A))
-
 
         # TS instruction. Sets contents of a given Memory cell to the contents of the accumulator.
         if instruction.__contains__('TS'):
             Memory.Memory[int(splitInstruction[1], 0)] = self.A
             # DEBUG
             print("(TS) New Memory value: " + str(Memory.Memory[int(splitInstruction[1], 0)]))
-
 
         # XCH instruction. Swaps contents of the accumulator with given Memory address.
         if instruction.__contains__('XCH'):
@@ -80,19 +75,19 @@ class CPU(object):
             arg = self.Q
             # DEBUG
             print("(XCH) Accumulator: ", str(self.A))
-            print("(XCH) Memory address: ",arg)
-
+            print("(XCH) Memory address: ", arg)
 
         # AUG instruction. Increments a positive value an negates a negative value.
         if instruction.__contains__('AUG'):
-            if (arg> 0):
-                arg = arg +1
-            if (arg<0):
-                arg = arg -1
+            if (arg > 0):
+                arg = arg + 1
+            if (arg < 0):
+                arg = arg - 1
             else:
                 pass
             # DEBUG
             print("(AUG) New Memory value: " + str(arg))
+
 
 # Main function
 def main():
